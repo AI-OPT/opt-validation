@@ -1,0 +1,159 @@
+group 'com.ai.runner.sdk'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.7
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+ext {
+    ipaasSDKVersion = "0.1-SNAPSHOT"
+    ipaasDBSVersion = "0.2-SNAPSHOT"
+    appName="opt-validation"
+    moduleVersion='1.0-SNAPSHOT'
+    builtBy="gradle 2.2"
+    publishUserName = "runnerdev"
+    publishUserPassword = "runnerdev"
+    publishURL = "http://10.1.228.199:18081/nexus/content/repositories/snapshots/"
+    //publishURL = "http://10.1.228.199:18081/nexus/content/repositories/releases/"
+}
+
+repositories {
+    maven { url "http://10.1.228.199:18081/nexus/content/groups/public/" }
+}
+
+dependencies {
+  //  compile 'org.mybatis:mybatis:3.3.0'
+ //   compile 'org.mybatis:mybatis-spring:1.2.3'
+    compile 'mysql:mysql-connector-java:5.1.36'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile "jstl:jstl:1.2"
+    compile "org.springframework:spring-web:4.1.7.RELEASE"
+    compile "org.springframework:spring-webmvc:4.1.7.RELEASE"
+	compile "org.springframework:spring-tx:4.1.7.RELEASE"
+    compile "org.springframework:spring-jdbc:4.1.7.RELEASE"
+    compile 'org.springframework:spring-context-support:4.1.7.RELEASE'
+    compile "commons-fileupload:commons-fileupload:1.3.1"
+    compile "commons-io:commons-io:2.4"
+
+  //  compile 'org.elasticsearch:elasticsearch:1.7.1'
+
+    compile "javax.servlet:javax.servlet-api:3.1.0"
+   // compile "javax.servlet.jsp:javax.servlet.jsp-api:2.3.1"
+    compile 'com.alibaba:fastjson:1.2.6'
+    compile 'com.alibaba:dubbo:2.5.3'
+	compile ("com.alibaba:dubbox:2.8.3") {
+		exclude group: 'org.springframework', module: 'spring'
+	}
+	compile ("com.101tec:zkclient:0.4") {
+		exclude group: 'org.apache.zookeeper', module: 'zookeeper'
+		exclude group: 'log4j', module: 'log4j'
+	}
+	compile "org.apache.zookeeper:zookeeper:3.4.6"
+
+  
+    compile "org.apache.zookeeper:zookeeper:3.4.6"
+   
+	compile "org.javassist:javassist:3.15.0-GA"
+  compile 'org.apache.curator:curator-framework:2.8.0'
+    compile 'org.apache.curator:curator-recipes:2.8.0'
+   compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.3'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.3'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-jcl', version: '2.3'
+    compile 'org.dom4j:dom4j:1.6.1'
+   
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+
+ compile 'com.google.code.maven-play-plugin.org.apache.thrift:thrift:0.2.0'
+
+
+       compile 'javax.validation:validation-api:1.0.0.GA'
+      // compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+       compile 'junit:junit:4.12'
+        
+        
+      compile 'org.hibernate:hibernate-validator:4.2.0.Final'
+
+  
+        compile "org.springframework:spring-test:4.1.7.RELEASE"
+     
+       
+          
+ }
+
+jar {
+    baseName appName
+    version moduleVersion
+    include "com/ai/runner/sdk/*/**"
+	manifest {
+        attributes 'packageName': baseName, 'Built-By': builtBy,'create-date': new Date().format('yyyy-MM-dd HH:mm:ss'), 'Manifest-Version': version
+    }
+}
+
+publishing {
+    publications {
+        publishing.publications.create("${appName}", MavenPublication) {
+            groupId group
+            artifactId appName
+            version moduleVersion
+            artifact jar
+            pom.withXml {
+                asNode().children().last() + {
+                    delegate.dependencies {
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-uac")
+                            delegate.version("0.2")
+                        }
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-ccs")
+                            delegate.version("0.2.2")
+                        }
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-dss")
+                            delegate.version("0.2.2")
+                        }
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-mcs")
+                            delegate.version("0.2.2")
+                        }                        
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-txs")
+                            delegate.version("0.3.0")
+                        }
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-dbs")
+                            delegate.version("0.2.1")
+                        }
+                        delegate.dependency {
+                            delegate.groupId("com.ai")
+                            delegate.artifactId("ipaas-ses")
+                            delegate.version("0.2")
+                        }
+                        delegate.dependency {
+                            delegate.groupId("com.zaxxer")
+                            delegate.artifactId("HikariCP")
+                            delegate.version("2.4.0")
+                        }
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url publishURL
+            credentials {
+                username = publishUserName
+                password = publishUserPassword
+            }
+        }
+    }
+}
