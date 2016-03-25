@@ -74,8 +74,8 @@ public class ValidationTest {
                 
                 // Save Error
                 try {
-                  //  parameter = new ValidationParameter();
-                  //  validationService.save(parameter);
+                    parameter = new ValidationParameter();
+                    validationService.save(parameter);
                    // Assert.fail();
                 } catch (RpcException e) {
                     ConstraintViolationException ve = (ConstraintViolationException)e.getCause();
@@ -94,8 +94,7 @@ public class ValidationTest {
                 } catch (RpcException e) {
                     ConstraintViolationException ve = (ConstraintViolationException)e.getCause();
                     Set<ConstraintViolation<?>> violations = ve.getConstraintViolations();
-                 //   Assert.assertNotNull(violations);
-                //    Assert.assertEquals(1, violations.size());
+                    System.out.println(violations);
                     
                 }
                 
@@ -106,8 +105,7 @@ public class ValidationTest {
                 } catch (RpcException e) {
                     ConstraintViolationException ve = (ConstraintViolationException)e.getCause();
                     Set<ConstraintViolation<?>> violations = ve.getConstraintViolations();
-                //    Assert.assertNotNull(violations);
-                 //   Assert.assertEquals(1, violations.size());
+                    System.out.println(violations);
                 }
                 try {
                     validationService.delete(2, null);
@@ -115,8 +113,7 @@ public class ValidationTest {
                 } catch (RpcException e) {
                     ConstraintViolationException ve = (ConstraintViolationException)e.getCause();
                     Set<ConstraintViolation<?>> violations = ve.getConstraintViolations();
-               //     Assert.assertNotNull(violations);
-                 //   Assert.assertEquals(1, violations.size());
+                    System.out.println(violations);
                 }
                 try {
                     validationService.delete(0, null);
@@ -124,8 +121,17 @@ public class ValidationTest {
                 } catch (RpcException e) {
                     ConstraintViolationException ve = (ConstraintViolationException)e.getCause();
                     Set<ConstraintViolation<?>> violations = ve.getConstraintViolations();
-                 //   Assert.assertNotNull(violations);
-                  //  Assert.assertEquals(2, violations.size());
+                    System.out.println(violations);
+               
+                }
+                try {
+                    validationService.delete(0, "0000");
+                //    Assert.fail();
+                } catch (RpcException e) {
+                    ConstraintViolationException ve = (ConstraintViolationException)e.getCause();
+                    Set<ConstraintViolation<?>> violations = ve.getConstraintViolations();
+                    System.out.println(violations);
+               
                 }
             } finally {
                 consumerContext.stop();

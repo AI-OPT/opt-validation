@@ -37,6 +37,7 @@ public class ValidationServiceImpl implements ValidationService {
     }
 
     public void delete(long id, String operator) {
+    	System.out.println("删除成功");
     }
 
 }
